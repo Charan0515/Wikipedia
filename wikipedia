@@ -2,176 +2,229 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wikipedia Search</title>
-    <!-- Bootstrap CSS and JavaScript libraries -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-        crossorigin="anonymous"></script>
-    <!-- Font Awesome for icons -->
-    <script src="https://kit.fontawesome.com/5f59ca6ad3.js" crossorigin="anonymous"></script>
-    <!-- Custom CSS -->
-    <style>
-        .main-container {
-            font-family: "Roboto";
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wikipedia Search</title>
 
-        .wiki-search-header {
-            border: 1px solid #d5cdcd;
-            padding: 30px 20px;
-            margin-bottom: 40px;
-        }
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <script src="https://kit.fontawesome.com/5f59ca6ad3.js" crossorigin="anonymous"></script>
 
-        .wiki-logo {
-            margin-bottom: 30px;
-            width: 150px;
-        }
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #f3f4f7, #e2e8f0);
+      min-height: 100vh;
+      color: #333;
+    }
 
-        .search-input {
-            border-radius: 3px;
-            padding: 10px;
-            border: 1px solid #d5cdcd;
-            font-size: 18px;
-        }
+    .wiki-search-header {
+      background: linear-gradient(135deg, #0077b6, #00b4d8);
+      color: white;
+      padding: 40px 20px;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .search-results {
-            width: 100%;
-            padding-left: 20px;
-        }
+    .wiki-logo {
+      width: 140px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.6));
+    }
 
-        .result-item {
-            margin-bottom: 20px;
-        }
+    .search-box {
+      position: relative;
+      max-width: 550px;
+      margin: 0 auto;
+    }
 
-        .result-title {
-            font-size: 22px;
-        }
+    .search-input {
+      width: 100%;
+      padding: 12px 50px 12px 20px;
+      border-radius: 30px;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      height: 50px;
+      line-height: 50px;
+      transition: all 0.3s ease;
+    }
 
-        .link-description {
-            font-size: 15px;
-            color: #444444;
-        }
+    .search-input:focus {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(0, 183, 255, 0.5);
+    }
 
-        .result-url {
-            color: #006621;
-            text-decoration: none;
-        }
-    </style>
+    .search-icon {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #0077b6;
+      font-size: 20px;
+      pointer-events: none;
+    }
+
+    .hint {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-top: 8px;
+      animation: fadeIn 2s infinite alternate;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0.6;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Spinner */
+    #spinner {
+      margin-top: 50px;
+    }
+
+    /* Search results */
+    .search-results {
+      margin: 50px auto;
+      max-width: 800px;
+      padding: 0 15px;
+    }
+
+    .result-item {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .result-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .result-title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #0077b6;
+      text-decoration: none;
+    }
+
+    .result-url {
+      color: #0a9396;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .link-description {
+      font-size: 15px;
+      color: #444;
+      margin-top: 5px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="main-container">
-        <div class="wiki-search-header text-center">
-            <img class="wiki-logo"
-                src="https://nkb-backend-otg-media-static.s3.ap-south-1.amazonaws.com/ccbp-dynamic-webapps/wiki-logo-img.png" />
-            <br />
-            <input placeholder="Type a keyword and press Enter to search" type="search" class="search-input w-100"
-                id="searchInput" />
-        </div>
-        <div class="d-none" id="spinner">
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
-        </div>
-        <div class="search-results" id="searchResults"></div>
+  <header class="wiki-search-header text-center">
+    <img class="wiki-logo"
+      src="https://nkb-backend-otg-media-static.s3.ap-south-1.amazonaws.com/ccbp-dynamic-webapps/wiki-logo-img.png"
+      alt="Wikipedia Logo" />
+    <div class="search-box">
+      <input type="search" id="searchInput" class="search-input" placeholder="Search Wikipedia..." />
+      <i class="fas fa-search search-icon"></i>
+      <p class="hint text-light">Press <strong>Enter</strong> to search</p>
     </div>
+  </header>
 
-    <script>
-        let searchInputEl = document.getElementById('searchInput');
-        let searchResultsContainer = document.getElementById('searchResults');
-        let spinnerEl = document.getElementById('spinner');
+  <div class="container text-center d-none" id="spinner">
+    <div class="spinner-border text-info" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
 
-        function createAndAppendSearchResult(result) {
-            // Create result item container
-            let resultItemDiv = document.createElement("div");
-            resultItemDiv.classList.add("result-item");
+  <div class="search-results" id="searchResults"></div>
 
-            // Create title link
-            let titleAnchor = document.createElement('a');
-            titleAnchor.classList.add("result-title");
-            titleAnchor.href = result.link;
-            titleAnchor.target = "_blank";
-            titleAnchor.textContent = result.title;
-            resultItemDiv.appendChild(titleAnchor);
+  <script>
+    const searchInputEl = document.getElementById('searchInput');
+    const searchResultsContainer = document.getElementById('searchResults');
+    const spinnerEl = document.getElementById('spinner');
 
-            // Create break element
-            resultItemDiv.appendChild(document.createElement('br'));
+    function createAndAppendSearchResult(result) {
+      const resultItemDiv = document.createElement("div");
+      resultItemDiv.classList.add("result-item");
 
-            // Create URL link
-            let urlAnchor = document.createElement('a');
-            urlAnchor.classList.add("result-url");
-            urlAnchor.href = result.link;
-            urlAnchor.target = "_blank";
-            urlAnchor.textContent = result.link;
-            resultItemDiv.appendChild(urlAnchor);
+      const titleAnchor = document.createElement('a');
+      titleAnchor.classList.add("result-title");
+      titleAnchor.href = result.link;
+      titleAnchor.target = "_blank";
+      titleAnchor.textContent = result.title;
+      resultItemDiv.appendChild(titleAnchor);
 
-            // Create break element
-            resultItemDiv.appendChild(document.createElement('br'));
+      resultItemDiv.appendChild(document.createElement('br'));
 
-            // Create description paragraph
-            let descriptionPara = document.createElement('p');
-            descriptionPara.classList.add('link-description');
-            descriptionPara.textContent = result.description;
-            resultItemDiv.appendChild(descriptionPara);
+      const urlAnchor = document.createElement('a');
+      urlAnchor.classList.add("result-url");
+      urlAnchor.href = result.link;
+      urlAnchor.target = "_blank";
+      urlAnchor.textContent = result.link;
+      resultItemDiv.appendChild(urlAnchor);
 
-            // Append result item to container
-            searchResultsContainer.appendChild(resultItemDiv);
-        }
+      resultItemDiv.appendChild(document.createElement('br'));
 
-        function displaySearchResults(searchResults) {
-            // Clear previous results
-            searchResultsContainer.innerHTML = '';
+      const descriptionPara = document.createElement('p');
+      descriptionPara.classList.add('link-description');
+      descriptionPara.innerHTML = result.description;
+      resultItemDiv.appendChild(descriptionPara);
 
-            // Iterate through results and display each
-            searchResults.forEach(result => {
-                createAndAppendSearchResult(result);
-            });
-        }
+      searchResultsContainer.appendChild(resultItemDiv);
+    }
 
-        function searchWikipedia(event) {
-            if (event.key === "Enter") {
-                // Display spinner while loading results
-                spinnerEl.classList.remove("d-none");
-                searchResultsContainer.innerHTML = '';
+    function displaySearchResults(searchResults) {
+      searchResultsContainer.innerHTML = '';
+      searchResults.forEach(result => {
+        createAndAppendSearchResult(result);
+      });
+    }
 
-                // Fetch data from Wikipedia API
-                let searchInput = searchInputEl.value;
-                let url = `https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srsearch=${encodeURIComponent(searchInput)}`;
+    function searchWikipedia(event) {
+      if (event.key === "Enter") {
+        spinnerEl.classList.remove("d-none");
+        searchResultsContainer.innerHTML = '';
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(jsonData => {
-                        let searchResults = jsonData.query.search.map(result => ({
-                            link: `https://en.wikipedia.org/?curid=${result.pageid}`,
-                            title: result.title,
-                            description: result.snippet
-                        }));
-                        // Hide spinner after fetching results
-                        spinnerEl.classList.add('d-none');
-                        // Display search results
-                        displaySearchResults(searchResults);
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        // Hide spinner on error
-                        spinnerEl.classList.add('d-none');
-                    });
-            }
-        }
+        const searchInput = searchInputEl.value.trim();
+        if (!searchInput) return;
 
-        searchInputEl.addEventListener("keydown", searchWikipedia);
-    </script>
+        const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&format=json&origin=*&srsearch=${encodeURIComponent(searchInput)}`;
+
+        fetch(url)
+          .then(response => response.json())
+          .then(jsonData => {
+            const searchResults = jsonData.query.search.map(result => ({
+              link: `https://en.wikipedia.org/?curid=${result.pageid}`,
+              title: result.title,
+              description: result.snippet
+            }));
+            spinnerEl.classList.add('d-none');
+            displaySearchResults(searchResults);
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            spinnerEl.classList.add('d-none');
+          });
+      }
+    }
+
+    searchInputEl.addEventListener("keydown", searchWikipedia);
+  </script>
 </body>
 
 </html>
